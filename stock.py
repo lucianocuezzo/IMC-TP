@@ -1,28 +1,34 @@
 import yfinance as yf
 import pandas as pd
 from IPython.display import display
+from statistics_data import Statistics
 
 class Stock:
-    def __init__(self, ticker: str, start: str, end: str) -> None:
-        self.trading_days = 252
+    def __init__(self, ticker: str, start: str, end: str, trading_days: float = 252, risk_free: float = 0.04) -> None:
+        self.trading_days = trading_days
         
-        self.rf_annualiced = 0.04 # Annualiced
-        self.rf
+        self.yearly_rf = risk_free
+        self.daily_rf = self.yearly_rf/self.trading_days
 
         self.data = yf.download(tickers=[ticker], start=start, end=end, interval='1d')
         self.daily_returns = self.get_daily_returns()
+
+        self.daily_statistics = self.get_statistics(True)
+        self.yearly_statistics = self.get_statistics(False)
         
-        self.daily_mean = self.daily_returns.mean()
-        self.yearly_mean = self.daily_mean*self.trading_days
+    
+    def get_statistics(self, is_daily: bool = True) -> Statistics:
+        mean = self.daily_returns.mean() if is_daily else self.daily_returns.mean()*self.trading_days
 
-        self.daily_var = self.daily_returns.var()
-        self.yearly_var = self.daily_var*self.trading_days**2
+        var = self.daily_returns.var() if is_daily else self.daily_returns.var()*self.trading_days**2
 
-        self.daily_std = self.daily_returns.std()
-        self.yearly_std = self.daily_std*self.trading_days
+        std_dev = self.daily_returns.std() if is_daily else self.daily_returns.std()*self.trading_days
 
-        self.daily_cv = self.daily_std/self.daily_mean
-        self.yearly_cv = self.yearly_std/self.yearly_mean
+        cv = std_dev/mean
+    
+        sharpe_ratio = (mean - (self.daily_rf if is_daily else self.yearly_rf))/std_dev
+    
+        return Statistics(mean,var,std_dev,cv,sharpe_ratio)
 
     def show_data(self):
         display(self.data)
