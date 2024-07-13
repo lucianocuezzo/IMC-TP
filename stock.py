@@ -47,8 +47,8 @@ class Stock:
         pass
 
     def get_daily_returns(self):
-        self.data['Daily Returns'] = self.data['Adj Close'].pct_change()
-        return self.data.dropna(subset=['Daily Returns'])['Daily Returns']
+        daily_returns_df = self.data['Adj Close'].pct_change()
+        return self.data.dropna(subset=['Adj Close']
 
     def show_statisticts(self):
         pass
