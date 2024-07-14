@@ -17,10 +17,9 @@ class Portfolio:
     def show_composition(self):
         print("Portfolio composition:")
         for stock_in_portolio in self.stocks_in_portfolio:
-            print(f"Stock {stock_in_portolio.stock.name} Weight in portfolio: {
-                  stock_in_portolio.weight}")
+            print(f"Stock {stock_in_portolio.stock.name} Weight in portfolio: {stock_in_portolio.weight}")
 
-    def get_stocks_in_portofolio_mean_returns(self):
+    def get_stocks_in_portfolio_mean_returns(self):
         mean_returns = [
             stock_in_portfolio.stock.yearly_statistics.mean for stock_in_portfolio in self.stocks]
         return np.array(mean_returns)
@@ -33,8 +32,7 @@ class Portfolio:
                     columns={'Daily Returns': f'{stock_in_portfolio.stock.name} Daily Returns'})
             else:
                 returns_df = returns_df.merge(stock_in_portfolio.stock.daily_returns.rename(
-                    columns={'Daily Returns': f'{
-                        stock_in_portfolio.stock.name} Daily Returns'}),
+                    columns={'Daily Returns': f'{stock_in_portfolio.stock.name} Daily Returns'}),
                     on='Date', how='inner')
 
         returns_df.drop('Date', axis=1, inplace=True)
