@@ -3,13 +3,19 @@ from scipy.optimize import minimize
 import pandas as pd
 import numpy as np
 
-from portfolio import Portfolio
+from portfolio import Portfolio, StockInPortfolio
 
 
 class OptimizationStrategy():
 
-    def generate_new_portfolio(old_portfolio: Portfolio, optimized_weights: list[float]):
-        pass
+    def generate_new_portfolio(self, old_portfolio: Portfolio, optimized_weights: list[float]):
+        stocks = [
+            stock_in_portfolio.stock for stock_in_portfolio in old_portfolio.stocks]
+
+        stocks_in_portfolio = [StockInPortfolio(
+            stock=stock, weight=weight) for stock, weight in zip(stocks, optimized_weights)]
+
+        return Portfolio(stocks_in_portfolio)
 
     def optimize(self, portfolio: Portfolio) -> Portfolio:
         return portfolio
@@ -19,15 +25,15 @@ class MinimizeSTD(OptimizationStrategy):
     def __init__(self, target_return: float) -> None:
         self.target_return = target_return
 
-    def standard_deviation(self, weights: list[float], covariance_matrix: pd.DataFrame):
+    def variance(self, weights: list[float], covariance_matrix: pd.DataFrame):
         return np.dot(weights.T, np.dot(covariance_matrix, weights))
 
-    def __get_constraints(self):
+    def __get_constraints(self, mean_returns: np.array):
         return [
             {'type': 'eq', 'fun': lambda weights: np.sum(
                 weights) - 1},
             {'type': 'ineq', 'fun': lambda weights: np.dot(
-                weights, np.array([0.10, 0.15, 0.12])) - self.target_return}
+                weights, mean_returns) - self.target_return}
         ]
 
     def optimize(self, portfolio: Portfolio) -> Portfolio:
@@ -39,8 +45,8 @@ class MinimizeSTD(OptimizationStrategy):
         constraints = self.__get_constraints(mean_returns)
         bounds = [(0, 1) for _ in range(len(initial_weights))]
 
-        result = minimize(fun=self.standard_deviation, x0=initial_weights, args=(
-            cov_matrix,), constraints=constraints, bounds=bounds)
+        result = minimize(fun=self.variance, x0=initial_weights, args=(
+            cov_matrix,), constraints=constraints, bounds=bounds, options={'disp': True})
 
         if result.success:
             print('Optimal Weights:', result.x)

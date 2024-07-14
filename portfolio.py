@@ -22,7 +22,7 @@ class Portfolio:
 
     def get_stocks_in_portofolio_mean_returns(self):
         mean_returns = [
-            stock.yearly_statistics.mean for stock in self.stocks]
+            stock_in_portfolio.stock.yearly_statistics.mean for stock_in_portfolio in self.stocks]
         return np.array(mean_returns)
 
     def get_covariance_matrix(self):
