@@ -25,10 +25,10 @@ class Stock:
             self.trading_days
 
         var = self.daily_returns['Daily Returns'].var() if is_daily else self.daily_returns['Daily Returns'].var() * \
-            self.trading_days**2
+            self.trading_days
 
         std_dev = self.daily_returns['Daily Returns'].std() if is_daily else self.daily_returns['Daily Returns'].std() * \
-            self.trading_days
+            self.trading_days**(1/2)
 
         cv = std_dev/mean
 
