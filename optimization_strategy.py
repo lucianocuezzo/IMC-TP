@@ -49,13 +49,13 @@ class MinimizeSTD(OptimizationStrategy):
             cov_matrix,), constraints=constraints, bounds=bounds, options={'disp': True})
 
         if result.success:
-            print('Optimal Weights:', result.x)
-            print('Portfolio Variance:', result.fun)
-            print('Portfolio Standard Deviation:', np.sqrt(result.fun))
-            print('Expected Portfolio Return:', np.dot(result.x, mean_returns))
+            print('Pesos Optimos:', result.x)
+            print('Varianza:', result.fun)
+            print('Desvio Estandar:', np.sqrt(result.fun))
+            print('Retorno Esperado:', np.dot(result.x, mean_returns))
             return super().generate_new_portfolio(portfolio, result.x)
         else:
-            print('Optimization failed:', result.message)
+            print('Optimizacion Fallida:', result.message)
             return portfolio
 
 
@@ -99,10 +99,10 @@ class MaximizeSharpeRatio(OptimizationStrategy):
             cov_matrix,portfolio), constraints=constraints, bounds=bounds)
 
         if result.success:
-            print('Optimal Weights:', result.x)
-            print('Portfolio Sharpe Ratio:', -result.fun)
-            print('Expected Portfolio Return:', np.dot(result.x, mean_returns))
+            print('Pesos Optimos:', result.x)
+            print('Sharpe Ratio:', -result.fun)
+            print('Retorno Esperado:', np.dot(result.x, mean_returns))
             return super().generate_new_portfolio(portfolio, result.x)
         else:
-            print('Optimization failed:', result.message)
+            print('Optimizacion Fallida:', result.message)
             return portfolio
