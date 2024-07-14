@@ -47,7 +47,7 @@ class MinimizeSTD(OptimizationStrategy):
             print('Portfolio Variance:', result.fun)
             print('Portfolio Standard Deviation:', np.sqrt(result.fun))
             print('Expected Portfolio Return:', np.dot(result.x, mean_returns))
-            return self.generate_new_portfolio(portfolio, result.x)
+            return super().generate_new_portfolio(portfolio, result.x)
         else:
             print('Optimization failed:', result.message)
             return portfolio
