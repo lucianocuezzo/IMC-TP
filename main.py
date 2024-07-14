@@ -1,5 +1,7 @@
 from stock import Stock
+from portfolio import CreatePortfolio
+from optimization_strategy import OptimizationStrategy, MinimizeSTD
 
-s = Stock(ticker='YPF',start="2020-01-02", end="2021-07-05")
-s.show_daily_returns()
-print(s.daily_median())
+minimize_std = MinimizeSTD(0.12)
+portfolio = CreatePortfolio.optimized_portfolio(
+    ["NVDA", "AAPL", "MSFT"], start_date="2020-01-01", end_date="2022-01-01", optimization_strategy=minimize_std)

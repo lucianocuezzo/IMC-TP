@@ -15,19 +15,19 @@ class Stock:
 
         self.data = yf.download(
             tickers=[ticker], start=start, end=end, interval='1d')
-        self.daily_returns = self.get_daily_returns()
+        self.daily_returns = self.__get_daily_returns()
 
-        self.daily_statistics = self.get_statistics(True)
-        self.yearly_statistics = self.get_statistics(False)
+        self.daily_statistics = self.__get_statistics(is_daily=True)
+        self.yearly_statistics = self.__get_statistics(is_daily=False)
 
-    def get_statistics(self, is_daily: bool = True) -> Statistics:
-        mean = self.daily_returns.mean() if is_daily else self.daily_returns.mean() * \
+    def __get_statistics(self, is_daily: bool = True) -> Statistics:
+        mean = self.daily_returns['Daily Returns'].mean() if is_daily else self.daily_returns['Daily Returns'].mean() * \
             self.trading_days
 
-        var = self.daily_returns.var() if is_daily else self.daily_returns.var() * \
+        var = self.daily_returns['Daily Returns'].var() if is_daily else self.daily_returns['Daily Returns'].var() * \
             self.trading_days**2
 
-        std_dev = self.daily_returns.std() if is_daily else self.daily_returns.std() * \
+        std_dev = self.daily_returns['Daily Returns'].std() if is_daily else self.daily_returns['Daily Returns'].std() * \
             self.trading_days
 
         cv = std_dev/mean
@@ -46,12 +46,12 @@ class Stock:
     def show_main_metrics(self):
         pass
 
-    def get_daily_returns(self):
-        daily_returns_df = self.data['Adj Close'].pct_change()
-        return self.data.dropna(subset=['Adj Close']
+    def __get_daily_returns(self):
+        daily_returns_df = self.data
+        daily_returns_df['Daily Returns'] = daily_returns_df['Adj Close'].pct_change()
+        daily_returns_df.dropna(subset=['Daily Returns'], inplace=True)
+        daily_returns_df.reset_index(inplace=True)
+        return daily_returns_df[['Date', 'Daily Returns']]
 
     def show_statisticts(self):
         pass
-
-    def daily_median(self):
-        return self.daily_returns.mean()
