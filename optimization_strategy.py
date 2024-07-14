@@ -32,8 +32,8 @@ class MinimizeSTD(OptimizationStrategy):
         return [
             {'type': 'eq', 'fun': lambda weights: np.sum(
                 weights) - 1},
-            {'type': 'ineq', 'fun': lambda weights: np.dot(
-                weights, mean_returns) - self.target_return}
+            {'type': 'ineq', 'fun': lambda weights: -np.dot(
+                weights, mean_returns) + self.target_return}
         ]
 
     def optimize(self, portfolio: Portfolio) -> Portfolio:
