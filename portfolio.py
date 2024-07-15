@@ -17,8 +17,7 @@ class Portfolio:
     def show_composition(self):
         print("Composición del portafolio:")
         for stock_in_portfolio in self.stocks:
-            print(f"{stock_in_portfolio.stock.name}: {
-                  stock_in_portfolio.weight * 100:.2f}%")
+            print(f"{stock_in_portfolio.stock.name}: {stock_in_portfolio.weight * 100:.2f}%")
 
     def get_stocks_in_portfolio_mean_returns(self):
         mean_returns = [
