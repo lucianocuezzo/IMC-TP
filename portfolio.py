@@ -17,7 +17,8 @@ class Portfolio:
     def show_composition(self):
         print("Composición del portafolio:")
         for stock_in_portfolio in self.stocks:
-            print(f"{stock_in_portfolio.stock.name}: {stock_in_portfolio.weight * 100:.2f}%")
+            print(f"{stock_in_portfolio.stock.name}: {
+                  stock_in_portfolio.weight * 100:.2f}%")
 
     def get_stocks_in_portfolio_mean_returns(self):
         mean_returns = [
@@ -32,7 +33,8 @@ class Portfolio:
                     columns={'Daily Returns': f'{stock_in_portfolio.stock.name} Daily Returns'})
             else:
                 returns_df = returns_df.merge(stock_in_portfolio.stock.daily_returns.rename(
-                    columns={'Daily Returns': f'{stock_in_portfolio.stock.name} Daily Returns'}),
+                    columns={'Daily Returns': f'{
+                        stock_in_portfolio.stock.name} Daily Returns'}),
                     on='Date', how='inner')
 
         returns_df.drop('Date', axis=1, inplace=True)
