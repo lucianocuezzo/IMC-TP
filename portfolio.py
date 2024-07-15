@@ -28,12 +28,9 @@ class Portfolio:
         returns_df = pd.DataFrame()
         for stock_in_portfolio in self.stocks:
             if returns_df.empty:
-                returns_df = stock_in_portfolio.stock.daily_returns.rename(
-                    columns={'Daily Returns': f'{stock_in_portfolio.stock.name} Daily Returns'})
+                returns_df = stock_in_portfolio.stock.daily_returns.rename(columns={'Daily Returns': f'{stock_in_portfolio.stock.name} Daily Returns'})
             else:
-                returns_df = returns_df.merge(stock_in_portfolio.stock.daily_returns.rename(
-                    columns={'Daily Returns': f'{
-                        stock_in_portfolio.stock.name} Daily Returns'}),
+                returns_df = returns_df.merge(stock_in_portfolio.stock.daily_returns.rename(columns={'Daily Returns': f'{stock_in_portfolio.stock.name} Daily Returns'}),
                     on='Date', how='inner')
 
         returns_df.drop('Date', axis=1, inplace=True)
