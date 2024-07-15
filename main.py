@@ -32,8 +32,11 @@ print(f"La acción más volátil durante el período es {most_volatile[0]} con u
 # Calcular la matriz de varianzas y covarianzas de los retornos medios para cada acción
 portfolio = CreatePortfolio.equally_weighted_portfolio(tickers, start_date, end_date)
 cov_matrix = portfolio.get_covariance_matrix()
+corr_matrix = portfolio.get_correlation_matrix()
 print("Matriz de varianzas y covarianzas:")
 print(cov_matrix)
+print("Matriz de correlaciones")
+print(corr_matrix)
 
 # Calcular el portafolio que minimiza la volatilidad (desvío estándar) con un rendimiento de 12%
 minimize_std = MinimizeSTD(0.12)

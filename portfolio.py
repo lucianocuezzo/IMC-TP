@@ -24,7 +24,7 @@ class Portfolio:
             stock_in_portfolio.stock.yearly_statistics.mean for stock_in_portfolio in self.stocks]
         return np.array(mean_returns)
 
-    def get_covariance_matrix(self):
+    def __get_returns_df(self):
         returns_df = pd.DataFrame()
         for stock_in_portfolio in self.stocks:
             if returns_df.empty:
@@ -36,7 +36,13 @@ class Portfolio:
                     on='Date', how='inner')
 
         returns_df.drop('Date', axis=1, inplace=True)
-        return returns_df.cov()
+        return returns_df
+
+    def get_covariance_matrix(self):
+        return self.__get_returns_df().cov()
+
+    def get_correlation_matrix(self):
+        return self.__get_returns_df().corr()
 
 
 class CreatePortfolio:
