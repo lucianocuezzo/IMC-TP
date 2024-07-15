@@ -17,14 +17,15 @@ class Portfolio:
     def show_composition(self):
         print("Composición del portafolio:")
         for stock_in_portfolio in self.stocks:
-            print(f"{stock_in_portfolio.stock.name}: {stock_in_portfolio.weight * 100:.2f}%")
+            print(f"{stock_in_portfolio.stock.name}: {
+                  stock_in_portfolio.weight * 100:.2f}%")
 
     def get_stocks_in_portfolio_mean_returns(self):
         mean_returns = [
             stock_in_portfolio.stock.yearly_statistics.mean for stock_in_portfolio in self.stocks]
         return np.array(mean_returns)
 
-    def get_covariance_matrix(self):
+    def __get_returns_df(self):
         returns_df = pd.DataFrame()
         for stock_in_portfolio in self.stocks:
             if returns_df.empty:
@@ -32,11 +33,18 @@ class Portfolio:
                     columns={'Daily Returns': f'{stock_in_portfolio.stock.name} Daily Returns'})
             else:
                 returns_df = returns_df.merge(stock_in_portfolio.stock.daily_returns.rename(
-                    columns={'Daily Returns': f'{stock_in_portfolio.stock.name} Daily Returns'}),
+                    columns={'Daily Returns': f'{
+                        stock_in_portfolio.stock.name} Daily Returns'}),
                     on='Date', how='inner')
 
         returns_df.drop('Date', axis=1, inplace=True)
-        return returns_df.cov()
+        return returns_df
+
+    def get_covariance_matrix(self):
+        return self.__get_returns_df().cov()
+
+    def get_correlation_matrix(self):
+        return self.__get_returns_df().corr()
 
 
 class CreatePortfolio:
